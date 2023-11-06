@@ -9,18 +9,18 @@ interface ButtonGroupProps {
 }
 
 const ButtonGroup: React.FC<ButtonGroupProps> = ({ router, setActive }) => {
-  const hasConnected = false;
+  const hasConnected = true;
   return hasConnected ? (
     <Button
       title="Create"
-      classStyles="mx-2 rounded-xl"
+      className="mx-2 rounded-xl"
       onClick={() => {
         setActive("");
         router.push(ROUTES.CREATE_NFT);
       }}
     />
   ) : (
-    <Button title="Connect" classStyles="mx-2 rounded-xl" onClick={() => {}} />
+    <Button title="Connect" className="mx-2 rounded-xl" onClick={() => {}} />
   );
 };
 

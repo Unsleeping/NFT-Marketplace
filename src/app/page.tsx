@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 
-import { Banner, CreatorCard, NFTCard } from "@/components";
+import { Banner, CreatorCard, Heading, NFTCard } from "@/components";
 import images from "@/assets";
 import { makeId } from "../../utils/makeId";
 
@@ -66,9 +66,7 @@ const Home = () => {
           childStyles="md:text-4xl sm:text-2xl xs:text-xl text-left text-white"
         />
         <div>
-          <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold ml-4 xs:ml-0">
-            Best Creators
-          </h1>
+          <Heading title="Best Creators" className="ml-4 xs:ml-0" />
           <div className="relative flex-1 max-w-full flex mt-3" ref={parentRef}>
             <div
               className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none"
@@ -124,9 +122,7 @@ const Home = () => {
         </div>
         <div className="mt-10">
           <div className="flexBetween mx-4 xs:mx-0 minlg:mx-8 sm:flex-col sm:items-start">
-            <h1 className="font-poppins dark:text-white text-nft-black-1 text-2xl minlg:text-4xl font-semibold sm:mb-4 flex-1">
-              Hot Bids
-            </h1>
+            <Heading title="Hot Bids" className="sm:mb-4 flex-1" />
             <div className="">SearchBar</div>
           </div>
           <div className="mt-3 w-full flex flex-wrap justify-start md:justify-center">

@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 
 import images from "@/assets";
 import Button from "@/components/Button";
+import Paragraph from "@/components/Paragraph";
 import FooterLinks from "./FooterLinks";
 
 const Footer = () => {
@@ -22,13 +23,12 @@ const Footer = () => {
               height={32}
               alt="logo"
             />
-            <p className="dark:text-white text-nft-black-1 font-semibold text-lg ml-1">
-              NeverRest
-            </p>
+            <Paragraph title="NeverRest" className="text-lg ml-1" />
           </div>
-          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base mt-6">
-            Get the latest updates
-          </p>
+          <Paragraph
+            title=" Get the latest updates"
+            className="text-base mt-6"
+          />
           <div className="flexBetween md:w-full minlg:w-557 w-357 mt-6 dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 rounded-md">
             <input
               type="email"
@@ -36,7 +36,7 @@ const Footer = () => {
               className="h-full flex-1 w-full dark:bg-nft-black-2 bg-white px-4 rounded-md dark:text-white text-nft-black-1 font-normal text-sx minlg:text-lg outline-none"
             />
             <div className="flex-initial">
-              <Button title="Email me" classStyles="rounded-md" />
+              <Button title="Email me" className="rounded-md" />
             </div>
           </div>
         </div>
@@ -58,9 +58,10 @@ const Footer = () => {
       </div>
       <div className="flexCenter w-full mt-5 border-t dark:border-nft-black-1 border-nft-gray-1 sm:px-4 px-16">
         <div className="flexBetween flex-row w-full minmd:w-4/5 sm:flex-col mt-7">
-          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base">
-            NeverRest, Inc. All Rights Reserved.
-          </p>
+          <Paragraph
+            title="NeverRest, Inc. All Rights Reserved."
+            className="text-base"
+          />
           <div className="flex flex-row sm:mt-4">
             {[
               images.instagram,

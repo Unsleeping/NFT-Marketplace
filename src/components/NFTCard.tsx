@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import images from "@/assets";
+import Paragraph from "@/components/Paragraph";
 
 interface NFT {
   i: number;
@@ -30,16 +31,17 @@ const NFTCard: React.FC<NFTCardProps> = ({ nft }) => (
         />
       </div>
       <div className="mt-3 flex flex-col">
-        <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm minlg:text-xl">
-          {nft.name}
-        </p>
+        <Paragraph title={nft.name} className="text-sm minlg:text-xl" />
         <div className="flexBetween mt-1 minlg:mt-3 flew-row xs:flex-col xs:items-start xs:mt-3">
-          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-xs minlg:text-lg">
-            {nft.price.toFixed(3)} <span className="font-normal">ETH</span>
-          </p>
-          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-xs minlg:text-lg">
-            {nft.seller}
-          </p>
+          <Paragraph
+            title={
+              <>
+                {nft.price.toFixed(3)} <span className="font-normal">ETH</span>
+              </>
+            }
+            className="text-xs minlg:text-lg"
+          />
+          <Paragraph title={nft.seller} className="text-xs minlg:text-lg" />
         </div>
       </div>
     </div>

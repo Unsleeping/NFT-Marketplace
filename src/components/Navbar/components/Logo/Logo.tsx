@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import images from "@/assets";
+import Paragraph from "@/components/Paragraph";
 
 const LogoImage = () => (
   <Image
@@ -19,9 +20,7 @@ const Logo = () => (
     <Link href="/">
       <div className="flexCenter md:hidden cursor-pointer" onClick={() => {}}>
         <LogoImage />
-        <p className="dark:text-white text-nft-black-1 font-semibold text-lg ml-1">
-          NeverRest
-        </p>
+        <Paragraph title="NeverRest" className="text-lg ml-1" />
       </div>
     </Link>
     <Link href="/">

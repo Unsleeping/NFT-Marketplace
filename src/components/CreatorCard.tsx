@@ -2,6 +2,7 @@ import * as React from "react";
 import Image, { type StaticImageData } from "next/image";
 
 import images from "@/assets";
+import Paragraph from "@/components/Paragraph";
 
 interface CreatorCardProps {
   rank: number;
@@ -42,12 +43,15 @@ const CreatorCard: React.FC<CreatorCardProps> = ({
       </div>
     </div>
     <div className="mt-3 minlg:mt-7 text-center flexCenter flex-col">
-      <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base">
-        {creatorName}
-      </p>
-      <p className="mt-1 font-poppins dark:text-white text-nft-black-1 font-semibold text-base">
-        {creatorEths.toFixed(2)} <span className="font-normal">ETH</span>
-      </p>
+      <Paragraph title={creatorName} className="text-base" />
+      <Paragraph
+        title={
+          <>
+            {creatorEths.toFixed(2)} <span className="font-normal">ETH</span>
+          </>
+        }
+        className="mt-1 text-base"
+      />
     </div>
   </div>
 );
