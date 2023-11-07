@@ -31,8 +31,14 @@ module.exports = {
   plugins: ["react"],
   rules: {
     semi: "off",
+    "@typescript-eslint/member-delimiter-style": 0,
+    "react/require-default-props": 0,
+    "@typescript-eslint/comma-dangle": 0,
+    "react/jsx-wrap-multilines":0,
+    "operator-linebreak": 0,
+    "@typescript-eslint/strict-boolean-expressions":0,
+    "comma-dangle":0,
     quotes: ["error", "double"],
-    "@typescript-eslint/comma-dangle": ["error", "always-multiline"],
     "@typescript-eslint/semi": ["error", "always"],
     "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/explicit-function-return-type": [
