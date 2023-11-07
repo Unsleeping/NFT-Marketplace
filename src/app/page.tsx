@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useTheme } from "next-themes";
 
 import { Banner, CreatorCard, Heading, NFTCard } from "@/components";

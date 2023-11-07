@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useTheme } from "next-themes";
 
 import { Button, Heading, Input, Paragraph } from "@/components";

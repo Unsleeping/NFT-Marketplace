@@ -1,5 +1,5 @@
 import * as React from "react";
-import Image, { type StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/legacy/image";
 
 import images from "@/assets";
 import Paragraph from "@/components/Paragraph";
