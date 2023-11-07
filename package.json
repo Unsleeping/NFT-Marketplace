@@ -9,17 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nomiclabs/hardhat-ethers": "2.0.5",
-    "@nomiclabs/hardhat-waffle": "2.0.3",
-    "@openzeppelin/contracts": "4.5.0",
     "axios": "0.26.0",
-    "ipfs-http-client": "56.0.1",
     "next": "14.0.1",
     "next-themes": "0.1.1",
     "react": "18",
     "react-dom": "18",
-    "react-dropzone": "12.0.4",
-    "web3modal": "1.9.5"
+    "react-dropzone": "12.0.4"
   },
   "devDependencies": {
     "@types/node": "20",
