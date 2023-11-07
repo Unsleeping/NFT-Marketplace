@@ -6,13 +6,38 @@ import { useTheme } from "next-themes";
 
 import { Banner, CreatorCard, Heading, NFTCard } from "@/components";
 import images from "@/assets";
-import { makeId } from "../../utils/makeId";
 
 // eslint-disable-next-line no-shadow
 enum Direction {
   LEFT,
   RIGHT,
 }
+
+const MOCK_CREATOR_NAMES: Record<number, string> = {
+  1: "0x75s...dj4",
+  2: "0x7dd...gj4",
+  3: "0x74s...5j4",
+  4: "0x75s...zj4",
+  5: "0x7ds...6j4",
+  6: "0x7gs...yj4",
+  7: "0x1x...dd4",
+  8: "0xts...dg4",
+  9: "0xfds...ds4",
+  10: "0xhds...gj4",
+};
+
+const MOCK_PRICES: Record<number, number> = {
+  1: 2.583053,
+  2: 3.583053,
+  3: 4.583053,
+  4: 5.583053,
+  5: 6.583053,
+  6: 7.583053,
+  7: 8.583053,
+  8: 9.583053,
+  9: 10.583053,
+  10: 11.583053,
+};
 
 const Home = () => {
   const [hideArrows, setHideArrows] = React.useState(false);
@@ -77,7 +102,7 @@ const Home = () => {
                   key={`creator-${i}`}
                   rank={i}
                   creatorImage={(images as any)[`creator${i}`]}
-                  creatorName={`0x${makeId(3)}...${makeId(4)}`}
+                  creatorName={MOCK_CREATOR_NAMES[i]}
                   creatorEths={10 - i * 0.5}
                 />
               ))}
@@ -132,9 +157,9 @@ const Home = () => {
                 nft={{
                   i: nftIndex,
                   name: `Nifty NFT ${nftIndex}`,
-                  price: Math.random() * 10,
-                  seller: `0x${makeId(3)}...${makeId(4)}`,
-                  owner: `0x${makeId(3)}...${makeId(4)}`,
+                  price: MOCK_PRICES[nftIndex],
+                  seller: MOCK_CREATOR_NAMES[nftIndex],
+                  owner: MOCK_CREATOR_NAMES[11 - nftIndex],
                   description: "Cool NFT on Sale",
                 }}
               />
