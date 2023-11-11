@@ -1,7 +1,9 @@
 import * as React from "react";
+import { type AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+
 import Button from "@/components/Button";
 import { ROUTES } from "@/routes";
-import { type AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { NFTContext } from "../../../../../context/NFTContext";
 
 interface ButtonGroupProps {
   router: AppRouterInstance;
@@ -9,7 +11,8 @@ interface ButtonGroupProps {
 }
 
 const ButtonGroup: React.FC<ButtonGroupProps> = ({ router, setActive }) => {
-  const hasConnected = true;
+  const { connectWallet, currentAccount } = React.useContext(NFTContext);
+  const hasConnected = !!currentAccount;
   return hasConnected ? (
     <Button
       title="Create"
@@ -20,7 +23,11 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ router, setActive }) => {
       }}
     />
   ) : (
-    <Button title="Connect" className="mx-2 rounded-xl" onClick={() => {}} />
+    <Button
+      title="Connect"
+      className="mx-2 rounded-xl"
+      onClick={connectWallet}
+    />
   );
 };
 
