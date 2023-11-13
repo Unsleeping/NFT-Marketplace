@@ -3,22 +3,29 @@
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/legacy/image";
+import { MediaRenderer } from "@thirdweb-dev/react";
 import { useTheme } from "next-themes";
 
 import { Button, Heading, Input, Paragraph } from "@/components";
 import images from "@/assets";
+import { NFTContext } from "../../../context/NFTContext";
 
 const CreateNFT = () => {
+  const { uploadToIPFS } = React.useContext(NFTContext);
   const { theme } = useTheme();
-  const [fileUrl] = React.useState(null);
+  const [fileUrl, setFileUrl] = React.useState("");
   const [formInput, setFormInput] = React.useState({
     price: "",
     name: "",
     description: "",
   });
 
-  const onDrop = React.useCallback(() => {
-    // upload image to the IPFS
+  const onDrop = React.useCallback(async (acceptedFiles: File[]) => {
+    const toThirdWebStorage = false;
+    const url = await uploadToIPFS(acceptedFiles[0], toThirdWebStorage);
+    if (url) {
+      setFileUrl(url);
+    }
   }, []);
 
   const {
@@ -74,7 +81,7 @@ const CreateNFT = () => {
             {fileUrl && (
               <aside>
                 <div>
-                  <Image src={fileUrl} alt="asset_file" />
+                  <MediaRenderer src={fileUrl} alt="asset_file" />
                 </div>
               </aside>
             )}

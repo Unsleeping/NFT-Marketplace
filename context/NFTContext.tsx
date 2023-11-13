@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Web3Modal from "@web3modal/ethers5";
 import { ethers } from "ethers";
@@ -10,12 +11,18 @@ type NFTContext = {
   currentAccount: string;
   nftCurrency: string;
   connectWallet: () => Promise<void>;
+  uploadToIPFS: (
+    file: File,
+    toThirdWebStorage?: boolean
+  ) => Promise<string | undefined>;
 };
 
 export const NFTContext = React.createContext<NFTContext>({
   currentAccount: "",
   nftCurrency: "ETH",
   connectWallet: () => new Promise((resolve) => resolve()),
+  uploadToIPFS: (file: File, toThirdWebStorage?: boolean) =>
+    new Promise((resolve) => resolve("")),
 });
 
 type NFTProviderProps = {
@@ -31,7 +38,6 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     const accounts = await window.ethereum.request<string[]>({
       method: "eth_accounts",
     });
-    console.log("accounts: ", accounts);
     if (accounts?.length && typeof accounts[0] === "string") {
       setCurrentAccount(accounts[0]);
     } else {
@@ -41,13 +47,32 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
 
   const connectWallet = async () => {
     if (!window?.ethereum) return alert("Please install MetaMask");
-    const accounts = await window.ethereum.request<any[]>({
+    const accounts = await window.ethereum.request<string[]>({
       method: "eth_requestAccounts",
     });
-    if (accounts?.length) {
+    if (accounts?.length && typeof accounts[0] === "string") {
       setCurrentAccount(accounts[0]);
     }
     window.location.reload();
+  };
+
+  const uploadToIPFS = async (file: File, toThirdWebStorage = false) => {
+    try {
+      const apiUrl = toThirdWebStorage
+        ? "/api/thirdweb-ipfs"
+        : "/api/infura-ipfs";
+      const data = new FormData();
+      data.append("name", "Image Upload");
+      data.append("file_attachment", file);
+      const response = await axios.post(apiUrl, data, {
+        headers: {
+          "Content-Type": "multipart/form-data;",
+        },
+      });
+      return response.data.url;
+    } catch (e) {
+      console.error(`Error uploading file to IPFS: ${e}`);
+    }
   };
 
   useEffect(() => {
@@ -60,6 +85,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         nftCurrency,
         connectWallet,
         currentAccount,
+        uploadToIPFS,
       }}
     >
       {children}
