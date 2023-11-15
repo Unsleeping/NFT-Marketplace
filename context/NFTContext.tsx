@@ -1,35 +1,50 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Web3Modal from "@web3modal/ethers5";
-import { ethers } from "ethers";
+import { Signer, ethers } from "ethers";
 import axios from "axios";
 
 import { MarketAddress, MarketAddressABI } from "./constants";
+import { NFTForm } from "@/app/create-nft/page";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useWeb3ModalSigner } from "@web3modal/ethers5/react";
+
+type UploadToIPFS = (
+  file: File,
+  toThirdWebStorage: boolean
+) => Promise<string | undefined>;
+
+type CreateNFT = (
+  formInput: NFTForm,
+  fileUrl: string,
+  router: AppRouterInstance
+) => Promise<void>;
 
 type NFTContext = {
   currentAccount: string;
   nftCurrency: string;
   connectWallet: () => Promise<void>;
-  uploadToIPFS: (
-    file: File,
-    toThirdWebStorage?: boolean
-  ) => Promise<string | undefined>;
+  uploadToIPFS: UploadToIPFS;
+  createNFT: CreateNFT;
 };
 
 export const NFTContext = React.createContext<NFTContext>({
   currentAccount: "",
   nftCurrency: "ETH",
   connectWallet: () => new Promise((resolve) => resolve()),
-  uploadToIPFS: (file: File, toThirdWebStorage?: boolean) =>
-    new Promise((resolve) => resolve("")),
+  uploadToIPFS: () => new Promise((resolve) => resolve("")),
+  createNFT: () => new Promise((resolve) => resolve()),
 });
+
+const fetchContract = (signerOrProvider?: Signer | ethers.providers.Provider) =>
+  new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
 type NFTProviderProps = {
   children: React.ReactNode;
 };
 
 export const NFTProvider = ({ children }: NFTProviderProps) => {
+  const { signer } = useWeb3ModalSigner();
   const nftCurrency = "ETH";
   const [currentAccount, setCurrentAccount] = useState<string>("");
 
@@ -56,7 +71,10 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     window.location.reload();
   };
 
-  const uploadToIPFS = async (file: File, toThirdWebStorage = false) => {
+  const uploadToIPFS: UploadToIPFS = async (
+    file,
+    toThirdWebStorage = false
+  ) => {
     try {
       const apiUrl = toThirdWebStorage
         ? "/api/thirdweb-ipfs"
@@ -75,6 +93,42 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     }
   };
 
+  const createNFT: CreateNFT = async (formInput, fileUrl, router) => {
+    const { name, description, price } = formInput;
+    if (!name || !description || !price || !fileUrl) {
+      return;
+    }
+
+    const response = await axios.post<
+      any,
+      { data: { url: string }; status: number }
+    >("api/create-nft", {
+      name,
+      description,
+      image: fileUrl,
+    });
+    if (response.status === 200) {
+      await createSale(response.data.url, price);
+      router.push("/");
+    }
+  };
+
+  const createSale = async (
+    url: string,
+    formInputPrice: string,
+    isReselling?: boolean,
+    id?: string
+  ) => {
+    const price = ethers.utils.parseUnits(formInputPrice, "ether");
+    const contract = fetchContract(signer);
+    const listingPrice = await contract.getListingPrice();
+
+    const transaction = await contract.createToken(url, price, {
+      value: listingPrice.toString(),
+    });
+    await transaction.wait();
+  };
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -86,6 +140,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         connectWallet,
         currentAccount,
         uploadToIPFS,
+        createNFT,
       }}
     >
       {children}
