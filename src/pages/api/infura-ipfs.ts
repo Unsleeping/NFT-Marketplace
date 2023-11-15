@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { create } from "kubo-rpc-client";
 import { createReadStream } from "fs";
 import { IncomingForm, File } from "formidable";
+import { getIPFSUrl } from "@/utils";
 
 const { INFURA_PROJECT_ID, INFURA_PROJECT_SECRET } = process.env;
 
@@ -51,7 +52,7 @@ export default async function handler(
       const added = await client.add(
         createReadStream(fileAttachment[0].filepath)
       );
-      const url = `https://unsleeping.infura-ipfs.io/ipfs/${added.cid}`;
+      const url = getIPFSUrl(added);
 
       res.status(200).json({ url });
     });

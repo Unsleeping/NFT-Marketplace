@@ -5,6 +5,7 @@ import { NFTContext } from "../../context/NFTContext";
 
 interface InputProps {
   title: string;
+  value?: string;
   placeholder: string;
   inputType: "input" | "textarea" | "number";
   handleChange: (
@@ -14,6 +15,7 @@ interface InputProps {
 
 const Input: React.FC<InputProps> = ({
   title,
+  value,
   placeholder,
   inputType,
   handleChange,
@@ -32,6 +34,7 @@ const Input: React.FC<InputProps> = ({
             type={inputType}
             placeholder={placeholder}
             onChange={handleChange}
+            value={value}
           />
           <Paragraph title={nftCurrency} className="text-xl" />
         </div>
@@ -42,6 +45,7 @@ const Input: React.FC<InputProps> = ({
           rows={3}
           className={`${sharedClassname} resize-none`}
           placeholder={placeholder}
+          value={value}
           onChange={handleChange}
         />
       )}
@@ -52,6 +56,7 @@ const Input: React.FC<InputProps> = ({
           type={inputType}
           placeholder={placeholder}
           onChange={handleChange}
+          value={value}
         />
       )}
     </div>
