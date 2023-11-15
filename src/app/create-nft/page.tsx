@@ -5,16 +5,27 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/legacy/image";
 import { MediaRenderer } from "@thirdweb-dev/react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 
 import { Button, Heading, Input, Paragraph } from "@/components";
 import images from "@/assets";
 import { NFTContext } from "../../../context/NFTContext";
 
+export type NFTItem = {
+  price: string;
+  name: string;
+  description: string;
+  image: string;
+};
+
+export type NFTForm = Omit<NFTItem, "image">;
+
 const CreateNFT = () => {
-  const { uploadToIPFS } = React.useContext(NFTContext);
+  const router = useRouter();
+  const { uploadToIPFS, createNFT } = React.useContext(NFTContext);
   const { theme } = useTheme();
   const [fileUrl, setFileUrl] = React.useState("");
-  const [formInput, setFormInput] = React.useState({
+  const [formInput, setFormInput] = React.useState<NFTForm>({
     price: "",
     name: "",
     description: "",
@@ -47,6 +58,11 @@ const CreateNFT = () => {
       ${isDragReject && " border-file-reject"}`,
     [isDragActive, isDragAccept, isDragReject]
   );
+
+  const handleCreateNFT = async () => {
+    await createNFT(formInput, fileUrl, router);
+  };
+
   return (
     <div className="flex justify-center sm:px-4 p-12">
       <div className="w-3/5 md:w-full">
@@ -90,6 +106,7 @@ const CreateNFT = () => {
         <Input
           inputType="input"
           title="Name"
+          value={formInput.name}
           placeholder="NFT Name"
           handleChange={(e) => {
             setFormInput({ ...formInput, name: e.target.value });
@@ -98,6 +115,7 @@ const CreateNFT = () => {
         <Input
           inputType="textarea"
           title="Description"
+          value={formInput.description}
           placeholder="NFT Description"
           handleChange={(e) => {
             setFormInput({ ...formInput, description: e.target.value });
@@ -107,6 +125,7 @@ const CreateNFT = () => {
           inputType="number"
           title="Price"
           placeholder="NFT Price"
+          value={formInput.price}
           handleChange={(e) => {
             setFormInput({ ...formInput, price: e.target.value });
           }}
@@ -114,7 +133,7 @@ const CreateNFT = () => {
         <div className="mt-7 w-full flex justify-end">
           <Button
             title="Create NFT"
-            onClick={() => {}}
+            onClick={handleCreateNFT}
             className="rounded-xl"
           />
         </div>
