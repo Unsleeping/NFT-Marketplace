@@ -1,7 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { type NextApiRequest, type NextApiResponse } from "next";
 import { create } from "kubo-rpc-client";
-import { NFTItem } from "@/app/create-nft/page";
+
 import { getIPFSUrl } from "@/utils";
+import { NFTItem } from "@/types";
+
 const { INFURA_PROJECT_ID, INFURA_PROJECT_SECRET } = process.env;
 
 const auth = `Basic ${Buffer.from(
@@ -28,7 +30,8 @@ export default async function handler(
 ) {
   try {
     if (req.method !== "POST") {
-      return res.status(405).json({ error: "Method Not Allowed" });
+      res.status(405).json({ error: "Method Not Allowed" });
+      return;
     }
 
     const polygonDataObject: Omit<NFTItem, "price"> = req.body;

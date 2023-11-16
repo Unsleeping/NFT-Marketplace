@@ -1,43 +1,22 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Signer, ethers } from "ethers";
+import { ethers } from "ethers";
 import axios from "axios";
 
-import { MarketAddress, MarketAddressABI } from "./constants";
-import { NFTForm } from "@/app/create-nft/page";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useWeb3ModalSigner } from "@web3modal/ethers5/react";
+import { Context, CreateNFT, FetchNFTs, UploadToIPFS } from "./types";
+import { NFTItem } from "@/types";
+import { fetchContract } from "@/utils";
 
-type UploadToIPFS = (
-  file: File,
-  toThirdWebStorage: boolean
-) => Promise<string | undefined>;
-
-type CreateNFT = (
-  formInput: NFTForm,
-  fileUrl: string,
-  router: AppRouterInstance
-) => Promise<void>;
-
-type NFTContext = {
-  currentAccount: string;
-  nftCurrency: string;
-  connectWallet: () => Promise<void>;
-  uploadToIPFS: UploadToIPFS;
-  createNFT: CreateNFT;
-};
-
-export const NFTContext = React.createContext<NFTContext>({
+export const NFTContext = React.createContext<Context>({
   currentAccount: "",
   nftCurrency: "ETH",
   connectWallet: () => new Promise((resolve) => resolve()),
   uploadToIPFS: () => new Promise((resolve) => resolve("")),
   createNFT: () => new Promise((resolve) => resolve()),
+  fetchNFTs: () => new Promise((resolve) => resolve([])),
 });
-
-const fetchContract = (signerOrProvider?: Signer | ethers.providers.Provider) =>
-  new ethers.Contract(MarketAddress, MarketAddressABI, signerOrProvider);
 
 type NFTProviderProps = {
   children: React.ReactNode;
@@ -129,6 +108,39 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     await transaction.wait();
   };
 
+  const fetchNFTs: FetchNFTs = async () => {
+    const provider = new ethers.providers.JsonRpcProvider();
+    const contract = fetchContract(provider); // to fetch all the NFTs from marketplace, not from a specific account
+
+    const data = await contract.fetchMarketItems();
+
+    const items = await Promise.all(
+      data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
+        const tokenURI = await contract.tokenURI(tokenId);
+        const {
+          data: { image, name, description },
+        } = await axios.get<
+          any,
+          { data: Omit<NFTItem, "price">; status: number }
+        >(tokenURI);
+        const price = ethers.utils.formatUnits(unformattedPrice, "ether");
+
+        return {
+          price,
+          tokenId: tokenId.toNumber(),
+          seller,
+          owner,
+          image,
+          name,
+          description,
+          tokenURI,
+        };
+      })
+    );
+
+    return items;
+  };
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -141,6 +153,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         currentAccount,
         uploadToIPFS,
         createNFT,
+        fetchNFTs,
       }}
     >
       {children}

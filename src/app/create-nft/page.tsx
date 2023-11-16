@@ -9,16 +9,20 @@ import { useRouter } from "next/navigation";
 
 import { Button, Heading, Input, Paragraph } from "@/components";
 import images from "@/assets";
+import { NFTForm } from "@/types";
 import { NFTContext } from "../../../context/NFTContext";
 
-export type NFTItem = {
-  price: string;
-  name: string;
-  description: string;
-  image: string;
-};
+const mockIpfsUrl =
+  "https://unsleeping.infura-ipfs.io/ipfs/QmQZaPhxWk2vRvxosUwjts8NL42RdRo6MU1KMhkeFc2bWu";
 
-export type NFTForm = Omit<NFTItem, "image">;
+const mockHandleCreateNFTResponse =
+  "https://unsleeping.infura-ipfs.io/ipfs/QmVpS53vuNpMWkhKnWcZzvfKs1cyWQ4SgiPs2eBJvM7fdj";
+
+const mockNftForm = {
+  price: "1",
+  name: "Test NFT",
+  description: "Test description",
+};
 
 const CreateNFT = () => {
   const router = useRouter();
@@ -33,7 +37,12 @@ const CreateNFT = () => {
 
   const onDrop = React.useCallback(async (acceptedFiles: File[]) => {
     const toThirdWebStorage = false;
-    const url = await uploadToIPFS(acceptedFiles[0], toThirdWebStorage);
+    const file = acceptedFiles[0];
+    //size limited exided => file = undefined
+    if (!file) {
+      return;
+    }
+    const url = await uploadToIPFS(file, toThirdWebStorage);
     if (url) {
       setFileUrl(url);
     }

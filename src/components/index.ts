@@ -3,6 +3,7 @@ import Footer from "./Footer";
 import Button from "./Button";
 import Banner from "./Banner";
 import CreatorCard from "./CreatorCard";
+import NFTMockedCard from "./NFTMockedCard";
 import NFTCard from "./NFTCard";
 import Heading from "./Heading";
 import Paragraph from "./Paragraph";
@@ -15,6 +16,7 @@ export {
   Banner,
   CreatorCard,
   NFTCard,
+  NFTMockedCard,
   Heading,
   Paragraph,
   Input,
