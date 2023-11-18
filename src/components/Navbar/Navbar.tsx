@@ -1,20 +1,25 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import Image from "next/legacy/image";
 
 import images from "@/assets";
 import { useTheme } from "next-themes";
-import { NAV_UL_DATA } from "./components/MenuItems";
 import { ThemeToggler, MenuItems, ButtonGroup, Logo } from "./components";
 
 const Navbar = () => {
   const { theme } = useTheme();
-  const [active, setActive] = React.useState(NAV_UL_DATA[0].name);
+  const [active, setActive] = React.useState(window.location.pathname);
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+  React.useEffect(() => {
+    if (pathname) {
+      setActive(pathname);
+    }
+  }, [pathname]);
   return (
     <nav className="flexBetween w-full fixed z-10 p-4 flex-row border-b dark:bg-nft-dark bg-white dark:border-nft-black-1 border-nft-gray-1">
       <div className="flex flex-1 flex-row justify-start">

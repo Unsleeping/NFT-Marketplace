@@ -5,9 +5,15 @@ import { ethers } from "ethers";
 import axios from "axios";
 
 import { useWeb3ModalSigner } from "@web3modal/ethers5/react";
-import { Context, CreateNFT, FetchNFTs, UploadToIPFS } from "./types";
+import {
+  Context,
+  CreateNFT,
+  FetchMyNFTsOrListedNFTs,
+  FetchNFTs,
+  UploadToIPFS,
+} from "./types";
 import { NFTItem } from "@/types";
-import { fetchContract } from "@/utils";
+import { fetchContract, getRenderableData } from "@/utils";
 
 export const NFTContext = React.createContext<Context>({
   currentAccount: "",
@@ -16,6 +22,7 @@ export const NFTContext = React.createContext<Context>({
   uploadToIPFS: () => new Promise((resolve) => resolve("")),
   createNFT: () => new Promise((resolve) => resolve()),
   fetchNFTs: () => new Promise((resolve) => resolve([])),
+  fetchMyNFTsOrListedNFTs: () => new Promise((resolve) => resolve([])),
 });
 
 type NFTProviderProps = {
@@ -98,8 +105,12 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     isReselling?: boolean,
     id?: string
   ) => {
-    const price = ethers.utils.parseUnits(formInputPrice, "ether");
+    if (!signer) {
+      throw new Error("trying to fetch while signer is underined");
+    }
     const contract = fetchContract(signer);
+
+    const price = ethers.utils.parseUnits(formInputPrice, "ether");
     const listingPrice = await contract.getListingPrice();
 
     const transaction = await contract.createToken(url, price, {
@@ -114,30 +125,23 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
 
     const data = await contract.fetchMarketItems();
 
-    const items = await Promise.all(
-      data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
-        const tokenURI = await contract.tokenURI(tokenId);
-        const {
-          data: { image, name, description },
-        } = await axios.get<
-          any,
-          { data: Omit<NFTItem, "price">; status: number }
-        >(tokenURI);
-        const price = ethers.utils.formatUnits(unformattedPrice, "ether");
+    const items = await getRenderableData(data, contract);
 
-        return {
-          price,
-          tokenId: tokenId.toNumber(),
-          seller,
-          owner,
-          image,
-          name,
-          description,
-          tokenURI,
-        };
-      })
-    );
+    return items;
+  };
 
+  const fetchMyNFTsOrListedNFTs: FetchMyNFTsOrListedNFTs = async (
+    type: "fetchItemsListed" | "fetchMyNFTs"
+  ) => {
+    if (!signer) {
+      throw new Error("trying to fetch while signer is underined");
+    }
+    const contract = fetchContract(signer);
+    const data =
+      type === "fetchItemsListed"
+        ? await contract.fetchItemsListed()
+        : await contract.fetchMyNFTs();
+    const items = await getRenderableData(data, contract);
     return items;
   };
 
@@ -154,6 +158,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         uploadToIPFS,
         createNFT,
         fetchNFTs,
+        fetchMyNFTsOrListedNFTs,
       }}
     >
       {children}

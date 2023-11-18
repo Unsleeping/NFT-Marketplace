@@ -7,7 +7,7 @@ const NAV_UL_DATA = [
   },
   {
     name: "Listed NFTs",
-    route: ROUTES.CREATED_NFTS,
+    route: ROUTES.LISTED_NFTS,
   },
   {
     name: "My NFTs",

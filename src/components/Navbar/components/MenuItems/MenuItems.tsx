@@ -15,10 +15,10 @@ const MenuItems = ({ active, setActive, isMobile }: MenuItemsProps) => (
       <li
         key={route}
         onClick={() => {
-          setActive(name);
+          setActive(route);
         }}
         className={`flex flex-row items-center font-poppins font-semibold text-base dark:hover:text-white hover:text-nft-dark mx-3 ${
-          active === name
+          active === route
             ? "dark:text-white text-nft-black-1"
             : "dark:text-nft-gray-3 text-nft-gray-2"
         } cursor-pointer`}

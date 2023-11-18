@@ -14,6 +14,10 @@ export type CreateNFT = (
 
 export type FetchNFTs = () => Promise<RenderableMarketItem[]>;
 
+export type FetchMyNFTsOrListedNFTs = (
+  type: "fetchItemsListed" | "fetchMyNFTs"
+) => Promise<RenderableMarketItem[]>;
+
 export type Context = {
   currentAccount: string;
   nftCurrency: string;
@@ -21,4 +25,5 @@ export type Context = {
   uploadToIPFS: UploadToIPFS;
   createNFT: CreateNFT;
   fetchNFTs: FetchNFTs;
+  fetchMyNFTsOrListedNFTs: FetchMyNFTsOrListedNFTs;
 };

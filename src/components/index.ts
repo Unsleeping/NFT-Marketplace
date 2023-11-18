@@ -8,6 +8,7 @@ import NFTCard from "./NFTCard";
 import Heading from "./Heading";
 import Paragraph from "./Paragraph";
 import Input from "./Input";
+import Loader from "./Loader";
 
 export {
   Navbar,
@@ -20,4 +21,5 @@ export {
   Heading,
   Paragraph,
   Input,
+  Loader,
 };
