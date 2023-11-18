@@ -3,6 +3,7 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
 
+// metamask private key
 const privateKey = fs.readFileSync(".secret").toString().trim();
 
 //https://docs.metamask.io/wallet/how-to/get-started-building/run-devnet/
