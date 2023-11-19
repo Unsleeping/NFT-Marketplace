@@ -6,14 +6,16 @@ import axios from "axios";
 
 import { useWeb3ModalSigner } from "@web3modal/ethers5/react";
 import {
+  BuyNFT,
   Context,
   CreateNFT,
   FetchMyNFTsOrListedNFTs,
   FetchNFTs,
   UploadToIPFS,
 } from "./types";
-import { NFTItem } from "@/types";
+import { RenderableMarketItem } from "@/types";
 import { fetchContract, getRenderableData } from "@/utils";
+import { ROUTES } from "@/routes";
 
 export const NFTContext = React.createContext<Context>({
   currentAccount: "",
@@ -23,6 +25,7 @@ export const NFTContext = React.createContext<Context>({
   createNFT: () => new Promise((resolve) => resolve()),
   fetchNFTs: () => new Promise((resolve) => resolve([])),
   fetchMyNFTsOrListedNFTs: () => new Promise((resolve) => resolve([])),
+  buyNFT: () => new Promise((resolve) => resolve()),
 });
 
 type NFTProviderProps = {
@@ -95,7 +98,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     });
     if (response.status === 200) {
       await createSale(response.data.url, price);
-      router.push("/");
+      router.push(ROUTES.ROOT);
     }
   };
 
@@ -106,7 +109,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     id?: string
   ) => {
     if (!signer) {
-      throw new Error("trying to fetch while signer is underined");
+      throw new Error("trying to fetch while signer is undefined");
     }
     const contract = fetchContract(signer);
 
@@ -134,7 +137,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     type: "fetchItemsListed" | "fetchMyNFTs"
   ) => {
     if (!signer) {
-      throw new Error("trying to fetch while signer is underined");
+      throw new Error("trying to fetch while signer is undefined");
     }
     const contract = fetchContract(signer);
     const data =
@@ -143,6 +146,22 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         : await contract.fetchMyNFTs();
     const items = await getRenderableData(data, contract);
     return items;
+  };
+
+  const buyNFT: BuyNFT = async (nft: RenderableMarketItem) => {
+    if (!signer) {
+      throw new Error("trying to buy while signer is undefined");
+    }
+    const contract = fetchContract(signer);
+
+    const price = ethers.utils.parseUnits(nft.price, "ether");
+
+    const tokenId = ethers.BigNumber.from(nft.tokenId);
+    const transaction = await contract.createMarketSale(tokenId, {
+      value: price,
+    });
+
+    await transaction.wait();
   };
 
   useEffect(() => {
@@ -159,6 +178,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         createNFT,
         fetchNFTs,
         fetchMyNFTsOrListedNFTs,
+        buyNFT,
       }}
     >
       {children}

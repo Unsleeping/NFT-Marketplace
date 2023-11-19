@@ -35,7 +35,10 @@ export type MarketContract = {
   ) => Promise<{ wait: () => Promise<void> }>;
   createMarketItem: (tokenId: BigNumber, price: BigNumber) => Promise<void>;
   resellToken: (tokenId: BigNumber, price: BigNumber) => Promise<void>;
-  createMarketSale: (tokenId: BigNumber) => Promise<void>;
+  createMarketSale: (
+    tokenId: BigNumber,
+    message: { value: BigNumber }
+  ) => Promise<{ wait: () => Promise<void> }>;
   fetchMarketItems: () => Promise<MarketItem[]>;
   fetchMyNFTs: () => Promise<MarketItem[]>;
   fetchItemsListed: () => Promise<MarketItem[]>;

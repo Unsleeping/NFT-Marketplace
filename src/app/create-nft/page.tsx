@@ -3,7 +3,6 @@
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/legacy/image";
-import { MediaRenderer } from "@thirdweb-dev/react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 
@@ -106,7 +105,13 @@ const CreateNFT = () => {
             {fileUrl && (
               <aside>
                 <div>
-                  <MediaRenderer src={fileUrl} alt="asset_file" />
+                  <Image
+                    src={fileUrl}
+                    width={300}
+                    height={300}
+                    objectFit="contain"
+                    alt="asset_file"
+                  />
                 </div>
               </aside>
             )}

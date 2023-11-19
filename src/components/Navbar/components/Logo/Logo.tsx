@@ -4,6 +4,7 @@ import Image from "next/legacy/image";
 
 import images from "@/assets";
 import Paragraph from "@/components/Paragraph";
+import { ROUTES } from "@/routes";
 
 const LogoImage = () => (
   <Image
@@ -17,13 +18,13 @@ const LogoImage = () => (
 
 const Logo = () => (
   <>
-    <Link href="/">
+    <Link href={ROUTES.ROOT}>
       <div className="flexCenter md:hidden cursor-pointer" onClick={() => {}}>
         <LogoImage />
         <Paragraph title="NeverRest" className="text-lg ml-1" />
       </div>
     </Link>
-    <Link href="/">
+    <Link href={ROUTES.ROOT}>
       <div className="hidden md:flex" onClick={() => {}}>
         <LogoImage />
       </div>

@@ -18,6 +18,8 @@ export type FetchMyNFTsOrListedNFTs = (
   type: "fetchItemsListed" | "fetchMyNFTs"
 ) => Promise<RenderableMarketItem[]>;
 
+export type BuyNFT = (nft: RenderableMarketItem) => Promise<void>;
+
 export type Context = {
   currentAccount: string;
   nftCurrency: string;
@@ -26,4 +28,5 @@ export type Context = {
   createNFT: CreateNFT;
   fetchNFTs: FetchNFTs;
   fetchMyNFTsOrListedNFTs: FetchMyNFTsOrListedNFTs;
+  buyNFT: BuyNFT;
 };

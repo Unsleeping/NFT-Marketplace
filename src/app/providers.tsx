@@ -2,7 +2,6 @@
 
 import { createWeb3Modal, defaultConfig } from "@web3modal/ethers5/react";
 import { ThemeProvider } from "next-themes";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
 import {
   arbitrum,
   avalanche,
@@ -44,8 +43,6 @@ createWeb3Modal({
 
 export const Providers = ({ children }: { children: React.ReactNode }) => (
   <NFTProvider>
-    <ThirdwebProvider clientId={process.env.NEXT_PUBLIC_THIRDWEB_API_KEY}>
-      <ThemeProvider attribute="class">{children}</ThemeProvider>
-    </ThirdwebProvider>
+    <ThemeProvider attribute="class">{children}</ThemeProvider>
   </NFTProvider>
 );

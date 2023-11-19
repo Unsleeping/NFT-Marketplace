@@ -11,10 +11,10 @@ import { ThemeToggler, MenuItems, ButtonGroup, Logo } from "./components";
 
 const Navbar = () => {
   const { theme } = useTheme();
-  const [active, setActive] = React.useState(window.location.pathname);
+  const pathname = usePathname();
+  const [active, setActive] = React.useState(pathname || "");
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   React.useEffect(() => {
     if (pathname) {
       setActive(pathname);
