@@ -82,7 +82,7 @@ const NFTDetails = () => {
   });
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
-  const [successModal, setSuccessModal] = React.useState(true);
+  const [successModal, setSuccessModal] = React.useState(false);
   const query = useSearchParams();
   const router = useRouter();
   React.useEffect(() => {
