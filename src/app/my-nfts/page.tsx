@@ -7,8 +7,9 @@ import { useWeb3ModalSigner } from "@web3modal/ethers5/react";
 import images from "../../assets";
 import { NFTContext } from "../../../context/NFTContext";
 import { RenderableMarketItem } from "@/types";
-import { Banner, Loader, NFTCard } from "@/components";
+import { Banner, Loader, NFTCard, SearchBar } from "@/components";
 import { shortenAddress } from "../../../utils/shortenAddress";
+import { useSearch } from "@/hooks/useSearch";
 
 //NFTs that you own, not listed for sale.
 //When a user creates an NFT, it belongs to the market with the creator's ownership property.
@@ -23,6 +24,14 @@ const MyNFTs = () => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [isError, setIsError] = React.useState(false);
   const [isFirstFetchingDone, setIsFirstFetchingDone] = React.useState(false);
+  const {
+    nftsCopy,
+    setNftsCopy,
+    activeSelect,
+    setActiveSelect,
+    onHandleSearch,
+    onClearSearch,
+  } = useSearch(nfts, setNfts);
 
   React.useEffect(() => {
     if (signer && !isFirstFetchingDone) {
@@ -31,6 +40,7 @@ const MyNFTs = () => {
           setIsLoading(false);
           setIsFirstFetchingDone(true);
           setNfts(items);
+          setNftsCopy(items);
         })
         .catch((e) => {
           console.error(e);
@@ -90,7 +100,7 @@ const MyNFTs = () => {
           </p>
         </div>
       </div>
-      {!isLoading && !nfts.length ? (
+      {!isLoading && !nfts.length && !nftsCopy.length ? (
         <div className="flexCenter sm:p-4 p-16">
           <h1 className="font-poppins dark:text-white text-nft-black-1 font-extrabold text-3xl">
             No NFTs Owned
@@ -99,7 +109,12 @@ const MyNFTs = () => {
       ) : (
         <div className="sm:px-4 p-12 w-full min-md:w-4/5 flexCenter flex-col">
           <div className="flex-1 w-full flex flex-row sm:flex-col px-4 xs:px-0 minlg:px-8">
-            SearchBar
+            <SearchBar
+              activeSelect={activeSelect}
+              setActiveSelect={setActiveSelect}
+              handleSearch={onHandleSearch}
+              clearSearch={onClearSearch}
+            />
           </div>
           <div className="mt-3 w-full flex flex-wrap">
             {nfts.map((nft) => (

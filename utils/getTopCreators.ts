@@ -15,5 +15,5 @@ export const getTopCreators = (nfts: RenderableMarketItem[]) => {
       seller.sum = String(currentSumInNumber + priceInNumber);
     }
   });
-  return res.sort((a, b) => (a.sum < b.sum ? -1 : 1));
+  return res.sort((a, b) => (+a.sum > +b.sum ? -1 : 1));
 };

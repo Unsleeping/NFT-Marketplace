@@ -25,6 +25,9 @@ const Navbar = () => {
       <div className="flex flex-1 flex-row justify-start">
         <Logo />
       </div>
+      <div className="mr-5 bg-nft-dark rounded-3xl">
+        <w3m-button />
+      </div>
       <div className="flex flex-initial flex-row justify-end">
         <div className="flex items-center mr-2">
           <ThemeToggler />
@@ -44,14 +47,19 @@ const Navbar = () => {
           width={!open ? 25 : 20}
           height={!open ? 25 : 20}
           onClick={() => {
-            setOpen(!open);
+            setOpen((open) => !open);
           }}
           className={theme === "light" ? "filter invert" : undefined}
         />
         {open && (
           <div className="fixed inset-0 top-65 dark:bg-nft-dark bg-white z-10 nav-h flex justify-between flex-col">
             <div className="flex-1 p-4">
-              <MenuItems active={active} setActive={setActive} isMobile />
+              <MenuItems
+                active={active}
+                setActive={setActive}
+                isMobile
+                onClose={() => setOpen(false)}
+              />
             </div>
             <div className="p-4 border-t dark:border-nft-black-1 border-nft-gray-1">
               <ButtonGroup router={router} setActive={setActive} />

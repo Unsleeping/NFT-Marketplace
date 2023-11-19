@@ -5,9 +5,15 @@ interface MenuItemsProps {
   active: string;
   setActive: React.Dispatch<React.SetStateAction<string>>;
   isMobile?: boolean;
+  onClose?: () => void;
 }
 
-const MenuItems = ({ active, setActive, isMobile }: MenuItemsProps) => (
+const MenuItems = ({
+  active,
+  setActive,
+  isMobile,
+  onClose,
+}: MenuItemsProps) => (
   <ul
     className={`list-none flexCenter flex-row ${isMobile && "flex-col h-full"}`}
   >
@@ -16,6 +22,9 @@ const MenuItems = ({ active, setActive, isMobile }: MenuItemsProps) => (
         key={route}
         onClick={() => {
           setActive(route);
+          if (isMobile) {
+            onClose?.();
+          }
         }}
         className={`flex flex-row items-center font-poppins font-semibold text-base dark:hover:text-white hover:text-nft-dark mx-3 ${
           active === route
