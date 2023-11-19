@@ -118,13 +118,11 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     const price = ethers.utils.parseUnits(formInputPrice, "ether");
     const listingPrice = await contract.getListingPrice();
 
-    const tokenId = ethers.BigNumber.from(id);
-
     const transaction = !isReselling
       ? await contract.createToken(url, price, {
           value: listingPrice.toString(),
         })
-      : await contract.resellToken(tokenId, price, {
+      : await contract.resellToken(ethers.BigNumber.from(id), price, {
           value: listingPrice.toString(),
         });
     await transaction.wait();
