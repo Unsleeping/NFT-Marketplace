@@ -69,7 +69,8 @@ const PaymentBody = ({ nft, nftCurrency }: PaymentBodyProps) => (
 );
 
 const NFTDetails = () => {
-  const { currentAccount, nftCurrency, buyNFT } = React.useContext(NFTContext);
+  const { currentAccount, nftCurrency, buyNFT, isLoadingNFT } =
+    React.useContext(NFTContext);
   const [paymentModal, setPaymentModal] = React.useState(false);
   const [nft, setNft] = React.useState<RenderableMarketItem>({
     image: "",
@@ -238,6 +239,18 @@ const NFTDetails = () => {
             </div>
           }
           handleClose={() => setPaymentModal(false)}
+        />
+      )}
+      {isLoadingNFT && (
+        <Modal
+          header="Buying NFT..."
+          body={
+            <div className="flexCenter flex-col text-center">
+              <div className="relative w-52 h-52">
+                <Loader />
+              </div>
+            </div>
+          }
         />
       )}
       {successModal && (

@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/legacy/image";
 import { useRouter } from "next/navigation";
 
-import { Button, Heading, Input, Paragraph } from "@/components";
+import { Button, Heading, Input, Loader, Paragraph } from "@/components";
 import images from "@/assets";
 import { NFTForm } from "@/types";
 import { NFTContext } from "../../../context/NFTContext";
@@ -13,7 +13,8 @@ import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 const CreateNFT = () => {
   const router = useRouter();
-  const { uploadToIPFS, createNFT } = React.useContext(NFTContext);
+  const { uploadToIPFS, createNFT, isLoadingNFT } =
+    React.useContext(NFTContext);
   const { theme, mounted } = useMountedTheme();
   const [fileUrl, setFileUrl] = React.useState("");
   const [formInput, setFormInput] = React.useState<NFTForm>({
@@ -61,6 +62,14 @@ const CreateNFT = () => {
 
   if (!mounted) {
     return null;
+  }
+
+  if (isLoadingNFT) {
+    return (
+      <div className="flexStart min-h-screen">
+        <Loader />
+      </div>
+    );
   }
 
   return (

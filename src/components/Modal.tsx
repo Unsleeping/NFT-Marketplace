@@ -9,8 +9,8 @@ import { useMountedTheme } from "@/hooks/useMountedTheme";
 interface ModalProps {
   header: React.ReactNode;
   body: React.ReactNode;
-  footer: React.ReactNode;
-  handleClose: () => void;
+  footer?: React.ReactNode;
+  handleClose?: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({ header, footer, body, handleClose }) => {
@@ -19,7 +19,7 @@ const Modal: React.FC<ModalProps> = ({ header, footer, body, handleClose }) => {
   const handleClickOutside = (e: React.MouseEvent) => {
     const target = e.target as Node;
     if (modalRef?.current && target && !modalRef.current.contains(target)) {
-      handleClose();
+      handleClose?.();
     }
   };
   if (!mounted) {

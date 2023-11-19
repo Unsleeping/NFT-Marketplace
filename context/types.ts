@@ -37,4 +37,5 @@ export type Context = {
   fetchMyNFTsOrListedNFTs: FetchMyNFTsOrListedNFTs;
   buyNFT: BuyNFT;
   createSale: CreateSale;
+  isLoadingNFT: boolean;
 };

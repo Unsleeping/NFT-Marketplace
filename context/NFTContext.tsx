@@ -21,6 +21,7 @@ import { ROUTES } from "@/routes";
 export const NFTContext = React.createContext<Context>({
   currentAccount: "",
   nftCurrency: "ETH",
+  isLoadingNFT: false,
   connectWallet: () => new Promise((resolve) => resolve()),
   uploadToIPFS: () => new Promise((resolve) => resolve("")),
   createNFT: () => new Promise((resolve) => resolve()),
@@ -38,6 +39,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
   const { signer } = useWeb3ModalSigner();
   const nftCurrency = "ETH";
   const [currentAccount, setCurrentAccount] = useState<string>("");
+  const [isLoadingNFT, setisLoadingNFT] = useState(false);
 
   const checkIfWalletIsConnected = async () => {
     if (!window?.ethereum) return alert("Please install MetaMask");
@@ -125,10 +127,13 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
       : await contract.resellToken(ethers.BigNumber.from(id), price, {
           value: listingPrice.toString(),
         });
+    setisLoadingNFT(true);
     await transaction.wait();
+    setisLoadingNFT(false); //
   };
 
   const fetchNFTs: FetchNFTs = async () => {
+    // setisLoadingNFT(false);
     const provider = new ethers.providers.JsonRpcProvider();
     const contract = fetchContract(provider); // to fetch all the NFTs from marketplace, not from a specific account
 
@@ -142,6 +147,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
   const fetchMyNFTsOrListedNFTs: FetchMyNFTsOrListedNFTs = async (
     type: "fetchItemsListed" | "fetchMyNFTs"
   ) => {
+    // setisLoadingNFT(false);
     if (!signer) {
       throw new Error("trying to fetch while signer is undefined");
     }
@@ -167,7 +173,9 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
       value: price,
     });
 
+    setisLoadingNFT(true);
     await transaction.wait();
+    setisLoadingNFT(false);
   };
 
   useEffect(() => {
@@ -186,6 +194,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         fetchMyNFTsOrListedNFTs,
         buyNFT,
         createSale,
+        isLoadingNFT,
       }}
     >
       {children}

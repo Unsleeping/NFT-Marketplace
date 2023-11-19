@@ -10,14 +10,13 @@ import { ROUTES } from "@/routes";
 import { NFTItem } from "@/types";
 
 const ResellNFT = () => {
-  const { createSale } = React.useContext(NFTContext);
+  const { createSale, isLoadingNFT } = React.useContext(NFTContext);
   const query = useSearchParams();
   const router = useRouter();
   const tokenURI = query?.get("tokenURI");
   const tokenId = query?.get("tokenId");
   const [price, setPrice] = React.useState("");
   const [image, setImage] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(true);
 
   const fetchNFT = async () => {
     if (!tokenURI) return;
@@ -26,7 +25,6 @@ const ResellNFT = () => {
       data: { image },
     } = await axios.get<any, { data: Omit<NFTItem, "price"> }>(tokenURI);
     setImage(image);
-    setIsLoading(false);
   };
 
   const resell = async () => {
@@ -42,7 +40,7 @@ const ResellNFT = () => {
     }
   }, [tokenURI]);
 
-  if (isLoading) {
+  if (isLoadingNFT) {
     return (
       <div className="flexStart min-h-screen">
         <Loader />
