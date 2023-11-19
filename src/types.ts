@@ -22,6 +22,7 @@ export type MarketItem = {
 export type RenderableMarketItem = Omit<MarketItem, "tokenId" | "price"> & {
   tokenId: number;
   price: string;
+  image: string; //todo maybe in smart contract also?
 };
 
 export type MarketContract = {

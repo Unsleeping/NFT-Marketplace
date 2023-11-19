@@ -6,22 +6,13 @@ import images from "@/assets";
 import Paragraph from "@/components/Paragraph";
 import { NFTContext } from "../../context/NFTContext";
 import { shortenAddress } from "../../utils/shortenAddress";
-
-interface NFT {
-  tokenId: number;
-  name: string;
-  seller: string;
-  owner: string;
-  price: string;
-  description: string;
-  image?: string;
-}
+import { RenderableMarketItem } from "@/types";
 
 interface NFTCardProps {
-  nft: NFT;
+  nft: RenderableMarketItem;
 }
 
-const NFTCard: React.FC<NFTCardProps> = ({ nft }) => {
+const NFTCard = ({ nft }: NFTCardProps) => {
   const { nftCurrency } = React.useContext(NFTContext);
   return (
     <Link href={{ pathname: "/nft-details", query: { ...nft } }}>

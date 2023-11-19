@@ -25,7 +25,7 @@ export const getRenderableData = async (
   data: MarketItem[],
   contract: MarketContract
 ): Promise<RenderableMarketItem[]> => {
-  const items = await Promise.all(
+  const items: RenderableMarketItem[] = await Promise.all(
     data.map(async ({ tokenId, seller, owner, price: unformattedPrice }) => {
       const tokenURI = await contract.tokenURI(tokenId);
       const {
