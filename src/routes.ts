@@ -4,4 +4,5 @@ export const ROUTES = {
   LISTED_NFTS: "/listed-nfts",
   NFT_DETAILS: "/nft-details",
   MY_NFTS: "/my-nfts",
+  RESELL_NFT: "/resell-nft",
 };

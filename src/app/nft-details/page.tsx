@@ -79,6 +79,7 @@ const NFTDetails = () => {
     price: "",
     seller: "",
     description: "",
+    tokenURI: "",
   });
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
@@ -94,6 +95,7 @@ const NFTDetails = () => {
       const name = query.get("name");
       const image = query.get("image");
       const owner = query.get("owner");
+      const tokenURI = query.get("tokenURI");
 
       if (
         isString(seller) &&
@@ -102,7 +104,8 @@ const NFTDetails = () => {
         isString(tokenId) &&
         isString(name) &&
         isString(price) &&
-        isString(image)
+        isString(image) &&
+        isString(tokenURI)
       ) {
         setNft({
           seller,
@@ -112,6 +115,7 @@ const NFTDetails = () => {
           tokenId: +tokenId,
           price,
           image,
+          tokenURI,
         });
         setIsLoading(false);
       } else {
@@ -196,10 +200,20 @@ const NFTDetails = () => {
             <p className="font-poppins dark:text-white text-nft-black-1 text-base font-normal border border-gray p-2">
               You cannot buy your own NFT
             </p>
+          ) : currentAccount.toLowerCase() === nft.owner.toLowerCase() ? (
+            <Button
+              title="List on Marketplace"
+              className="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
+              onClick={() =>
+                router.push(
+                  `${ROUTES.RESELL_NFT}?tokenId=${nft.tokenId}&tokenURI=${nft.tokenURI}`
+                )
+              }
+            />
           ) : (
             <Button
               title={`Buy for ${nft.price} ${nftCurrency}`}
-              className="mr-5 sm:mr-0 rounded-xl"
+              className="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
               onClick={() => setPaymentModal(true)}
             />
           )}

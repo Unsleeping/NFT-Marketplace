@@ -17,6 +17,7 @@ export type MarketItem = {
   sold?: boolean;
   description: string;
   name: string;
+  tokenURI: string;
 };
 
 export type RenderableMarketItem = Omit<MarketItem, "tokenId" | "price"> & {
