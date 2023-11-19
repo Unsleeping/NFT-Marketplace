@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 import images from "../../assets";
 import { NFTContext } from "../../../context/NFTContext";
-import { Button, Loader, NFTCard } from "@/components";
+import { Button, Loader, Modal } from "@/components";
 import { shortenAddress } from "../../../utils/shortenAddress";
 import { MediaRenderer } from "@thirdweb-dev/react";
 import { RenderableMarketItem } from "@/types";
@@ -15,8 +15,57 @@ function isString(value: unknown): value is string {
   return typeof value === "string";
 }
 
+interface PaymentBodyProps {
+  nft: RenderableMarketItem;
+  nftCurrency: string;
+}
+
+const PaymentBody = ({ nft, nftCurrency }: PaymentBodyProps) => (
+  <div className="flex flex-col">
+    <div className="flexBetween">
+      <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base minlg:text-xl">
+        Item
+      </p>
+      <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-base minlg:text-xl">
+        Subtotal
+      </p>
+    </div>
+    <div className="flexBetweenStart my-5">
+      <div className="flex-1 flexStartCenter">
+        <div className="relative w-28 h-28">
+          <Image src={nft.image} layout="fill" objectFit="cover" />
+        </div>
+        <div className="flexCenterStart flex-col ml-5">
+          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm minlg:text-xl">
+            {shortenAddress(nft.seller)}
+          </p>
+          <p className="font-poppins dark:text-white text-nft-black-1 font-semibold text-sm minlg:text-xl">
+            {nft.name}
+          </p>
+        </div>
+      </div>
+      <div>
+        <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-sm minlg:text-xl">
+          {nft.price}&nbsp;
+          <span className="font-semibold">{nftCurrency}</span>
+        </p>
+      </div>
+    </div>
+    <div className="flexBetween mt-10">
+      <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-base minlg:text-xl">
+        Total
+      </p>
+      <p className="font-poppins dark:text-white text-nft-black-1 font-normal text-sm minlg:text-xl">
+        {nft.price}&nbsp;
+        <span className="font-semibold">{nftCurrency}</span>
+      </p>
+    </div>
+  </div>
+);
+
 const NFTDetails = () => {
   const { currentAccount, nftCurrency } = React.useContext(NFTContext);
+  const [paymentModal, setPaymentModal] = React.useState(false);
   const [nft, setNft] = React.useState<RenderableMarketItem>({
     image: "",
     tokenId: 133794929294,
@@ -130,10 +179,32 @@ const NFTDetails = () => {
             <Button
               title={`Buy for ${nft.price} ${nftCurrency}`}
               className="mr-5 sm:mr-0 rounded-xl"
+              onClick={() => setPaymentModal(true)}
             />
           )}
         </div>
       </div>
+      {paymentModal && (
+        <Modal
+          header="Check Out"
+          body={<PaymentBody nft={nft} nftCurrency={nftCurrency} />}
+          footer={
+            <div className="flex flex-row sm:flex-col">
+              <Button
+                title="Checkout"
+                className="mr-5 sm:mr-0 sm:mb-5 rounded-xl"
+                onClick={() => {}}
+              />
+              <Button
+                title="Cancel"
+                className="rounded-xl nft-outlined"
+                onClick={() => setPaymentModal(false)}
+              />
+            </div>
+          }
+          handleClose={() => setPaymentModal(false)}
+        />
+      )}
     </div>
   );
 };

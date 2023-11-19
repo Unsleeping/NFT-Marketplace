@@ -9,6 +9,7 @@ import Heading from "./Heading";
 import Paragraph from "./Paragraph";
 import Input from "./Input";
 import Loader from "./Loader";
+import Modal from "./Modal";
 
 export {
   Navbar,
@@ -22,4 +23,5 @@ export {
   Paragraph,
   Input,
   Loader,
+  Modal,
 };
