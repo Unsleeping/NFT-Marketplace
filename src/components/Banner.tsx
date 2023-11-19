@@ -1,7 +1,7 @@
 import * as React from "react";
 
 interface BannerProps {
-  title: string;
+  title: React.ReactNode;
   parentStyles?: string;
   childStyles?: string;
 }
@@ -17,7 +17,7 @@ const Banner: React.FC<BannerProps> = ({
     }`}
   >
     <p
-      className={`font-bold text-5xl font-poppins leading-70 ${
+      className={`font-bold text-5xl font-poppins leading-70 text-white ${
         childStyles ?? ""
       }`}
     >
