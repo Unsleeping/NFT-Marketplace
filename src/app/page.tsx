@@ -14,6 +14,8 @@ import {
 import images from "@/assets";
 import { NFTContext } from "../../context/NFTContext";
 import { RenderableMarketItem } from "@/types";
+import { getTopCreators } from "../../utils/getTopCreators";
+import { shortenAddress } from "../../utils/shortenAddress";
 
 enum Direction {
   LEFT,
@@ -93,9 +95,12 @@ const Home = () => {
 
   React.useEffect(() => {
     fetchNFTs().then((items) => {
+      console.log("items: ", items);
       setNfts(items);
     });
   }, []);
+
+  const topCreators = getTopCreators(nfts);
 
   return (
     <div className="flex justify-center sm:px-4 p-12">
@@ -113,7 +118,16 @@ const Home = () => {
               className="flex flex-row w-max overflow-x-scroll no-scrollbar select-none"
               ref={scrollRef}
             >
-              {[6, 7, 8, 9, 10].map((i) => (
+              {topCreators.map((creator, idx) => (
+                <CreatorCard
+                  key={creator.seller}
+                  rank={idx + 1}
+                  creatorImage={(images as any)[`creator${idx + 1}`]}
+                  creatorName={shortenAddress(creator.seller)}
+                  creatorEths={+creator.sum}
+                />
+              ))}
+              {/* {[6, 7, 8, 9, 10].map((i) => (
                 <CreatorCard
                   key={`creator-${i}`}
                   rank={i}
@@ -121,7 +135,7 @@ const Home = () => {
                   creatorName={MOCK_CREATOR_NAMES[i]}
                   creatorEths={10 - i * 0.5}
                 />
-              ))}
+              ))} */}
               {!hideArrows && (
                 <>
                   <div
