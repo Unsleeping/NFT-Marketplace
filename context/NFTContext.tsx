@@ -9,6 +9,7 @@ import {
   BuyNFT,
   Context,
   CreateNFT,
+  CreateSale,
   FetchMyNFTsOrListedNFTs,
   FetchNFTs,
   UploadToIPFS,
@@ -26,6 +27,7 @@ export const NFTContext = React.createContext<Context>({
   fetchNFTs: () => new Promise((resolve) => resolve([])),
   fetchMyNFTsOrListedNFTs: () => new Promise((resolve) => resolve([])),
   buyNFT: () => new Promise((resolve) => resolve()),
+  createSale: () => new Promise((resolve) => resolve()),
 });
 
 type NFTProviderProps = {
@@ -102,7 +104,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     }
   };
 
-  const createSale = async (
+  const createSale: CreateSale = async (
     url: string,
     formInputPrice: string,
     isReselling?: boolean,
@@ -116,9 +118,15 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
     const price = ethers.utils.parseUnits(formInputPrice, "ether");
     const listingPrice = await contract.getListingPrice();
 
-    const transaction = await contract.createToken(url, price, {
-      value: listingPrice.toString(),
-    });
+    const tokenId = ethers.BigNumber.from(id);
+
+    const transaction = !isReselling
+      ? await contract.createToken(url, price, {
+          value: listingPrice.toString(),
+        })
+      : await contract.resellToken(tokenId, price, {
+          value: listingPrice.toString(),
+        });
     await transaction.wait();
   };
 
@@ -179,6 +187,7 @@ export const NFTProvider = ({ children }: NFTProviderProps) => {
         fetchNFTs,
         fetchMyNFTsOrListedNFTs,
         buyNFT,
+        createSale,
       }}
     >
       {children}

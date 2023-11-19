@@ -7,7 +7,9 @@ import { Loader, NFTCard } from "@/components";
 import { RenderableMarketItem } from "@/types";
 import { NFTContext } from "../../../context/NFTContext";
 
+//NFTs which u r saling
 const ListedNFTs = ({}) => {
+  //update on signer change
   const { signer } = useWeb3ModalSigner();
   const { fetchMyNFTsOrListedNFTs } = React.useContext(NFTContext);
   const [nfts, setNfts] = React.useState<RenderableMarketItem[]>([]);

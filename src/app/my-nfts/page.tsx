@@ -10,7 +10,12 @@ import { RenderableMarketItem } from "@/types";
 import { Banner, Loader, NFTCard } from "@/components";
 import { shortenAddress } from "../../../utils/shortenAddress";
 
+//NFTs that you own, not listed for sale.
+//When a user creates an NFT, it belongs to the market with the creator's ownership property.
+//When another user buys it, the owner will now be the buyer, and the purchased NFT will appear on the "My NFTs" page.
+//When you want to resell it to make a profit, you can list it. After such an action, your token will be removed from the "My NFTs" page and moved to the "Listed NFTs" page.
 const MyNFTs = () => {
+  //update on signer change
   const { signer } = useWeb3ModalSigner();
   const { fetchMyNFTsOrListedNFTs, currentAccount } =
     React.useContext(NFTContext);

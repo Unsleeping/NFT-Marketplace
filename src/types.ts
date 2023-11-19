@@ -26,6 +26,10 @@ export type RenderableMarketItem = Omit<MarketItem, "tokenId" | "price"> & {
   image: string; //todo maybe in smart contract also?
 };
 
+type Waitable<T> = T & {
+  wait: () => Promise<void>;
+};
+
 export type MarketContract = {
   updateListingPrice: (listingPrice: number) => Promise<void>;
   getListingPrice: () => Promise<number>;
@@ -33,13 +37,17 @@ export type MarketContract = {
     url: string,
     price: BigNumber,
     message: { value: string }
-  ) => Promise<{ wait: () => Promise<void> }>;
+  ) => Promise<Waitable<void>>;
   createMarketItem: (tokenId: BigNumber, price: BigNumber) => Promise<void>;
-  resellToken: (tokenId: BigNumber, price: BigNumber) => Promise<void>;
+  resellToken: (
+    tokenId: BigNumber,
+    price: BigNumber,
+    message: { value: string }
+  ) => Promise<Waitable<void>>;
   createMarketSale: (
     tokenId: BigNumber,
     message: { value: BigNumber }
-  ) => Promise<{ wait: () => Promise<void> }>;
+  ) => Promise<Waitable<void>>;
   fetchMarketItems: () => Promise<MarketItem[]>;
   fetchMyNFTs: () => Promise<MarketItem[]>;
   fetchItemsListed: () => Promise<MarketItem[]>;
