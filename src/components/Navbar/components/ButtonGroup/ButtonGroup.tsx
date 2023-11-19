@@ -8,9 +8,16 @@ import { NFTContext } from "../../../../../context/NFTContext";
 interface ButtonGroupProps {
   router: AppRouterInstance;
   setActive: React.Dispatch<React.SetStateAction<string>>;
+  isMobile?: boolean;
+  onClose?: () => void;
 }
 
-const ButtonGroup: React.FC<ButtonGroupProps> = ({ router, setActive }) => {
+const ButtonGroup: React.FC<ButtonGroupProps> = ({
+  router,
+  setActive,
+  isMobile,
+  onClose,
+}) => {
   const { connectWallet, currentAccount } = React.useContext(NFTContext);
   const hasConnected = !!currentAccount;
   return hasConnected ? (
@@ -19,6 +26,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ router, setActive }) => {
       className="mx-2 rounded-xl"
       onClick={() => {
         setActive("");
+        if (isMobile) onClose?.();
         router.push(ROUTES.CREATE_NFT);
       }}
     />

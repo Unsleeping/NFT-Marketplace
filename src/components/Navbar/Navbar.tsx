@@ -6,26 +6,30 @@ import { useRouter, usePathname } from "next/navigation";
 import Image from "next/legacy/image";
 
 import images from "@/assets";
-import { useTheme } from "next-themes";
 import { ThemeToggler, MenuItems, ButtonGroup, Logo } from "./components";
+import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 const Navbar = () => {
-  const { theme } = useTheme();
+  const { theme, mounted } = useMountedTheme();
   const pathname = usePathname();
   const [active, setActive] = React.useState(pathname || "");
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
+  const handleClose = () => setOpen(false);
   React.useEffect(() => {
     if (pathname) {
       setActive(pathname);
     }
   }, [pathname]);
+  if (!mounted) {
+    return null;
+  }
   return (
     <nav className="flexBetween w-full fixed z-10 p-4 flex-row border-b dark:bg-nft-dark bg-white dark:border-nft-black-1 border-nft-gray-1">
       <div className="flex flex-1 flex-row justify-start">
-        <Logo />
+        <Logo onClose={handleClose} />
       </div>
-      <div className="mr-5 bg-nft-dark rounded-3xl">
+      <div className="mx-5 sm:hidden max-h-8 -mt-1.5">
         <w3m-button />
       </div>
       <div className="flex flex-initial flex-row justify-end">
@@ -39,13 +43,13 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      <div className="hidden md:flex ml-2">
+      <div className={`hidden md:flex ml-2 ${open && "ml-3"}`}>
         <Image
           src={open ? images.cross : images.menu}
           alt="menu"
           objectFit="contain"
-          width={!open ? 25 : 20}
-          height={!open ? 25 : 20}
+          width={!open ? 24 : 20}
+          height={!open ? 24 : 20}
           onClick={() => {
             setOpen((open) => !open);
           }}
@@ -58,11 +62,19 @@ const Navbar = () => {
                 active={active}
                 setActive={setActive}
                 isMobile
-                onClose={() => setOpen(false)}
+                onClose={handleClose}
               />
             </div>
-            <div className="p-4 border-t dark:border-nft-black-1 border-nft-gray-1">
-              <ButtonGroup router={router} setActive={setActive} />
+            <div className="flex p-4 border-t dark:border-nft-black-1 border-nft-gray-1">
+              <ButtonGroup
+                router={router}
+                setActive={setActive}
+                isMobile
+                onClose={handleClose}
+              />
+              <div className="ml-2 xs:hidden sm:block md:hidden max-h-8 -mt-0.5">
+                <w3m-button />
+              </div>
             </div>
           </div>
         )}

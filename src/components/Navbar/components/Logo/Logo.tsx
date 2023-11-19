@@ -16,16 +16,20 @@ const LogoImage = () => (
   />
 );
 
-const Logo = () => (
+type LogoProps = {
+  onClose: () => void;
+};
+
+const Logo = ({ onClose }: LogoProps) => (
   <>
     <Link href={ROUTES.ROOT}>
-      <div className="flexCenter md:hidden cursor-pointer" onClick={() => {}}>
+      <div className="flexCenter md:hidden cursor-pointer">
         <LogoImage />
         <Paragraph title="NeverRest" className="text-lg ml-1" />
       </div>
     </Link>
     <Link href={ROUTES.ROOT}>
-      <div className="hidden md:flex" onClick={() => {}}>
+      <div className="hidden md:flex" onClick={onClose}>
         <LogoImage />
       </div>
     </Link>

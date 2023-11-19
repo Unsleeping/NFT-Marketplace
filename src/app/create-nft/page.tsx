@@ -3,30 +3,18 @@
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/legacy/image";
-import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 
 import { Button, Heading, Input, Paragraph } from "@/components";
 import images from "@/assets";
 import { NFTForm } from "@/types";
 import { NFTContext } from "../../../context/NFTContext";
-
-const mockIpfsUrl =
-  "https://unsleeping.infura-ipfs.io/ipfs/QmQZaPhxWk2vRvxosUwjts8NL42RdRo6MU1KMhkeFc2bWu";
-
-const mockHandleCreateNFTResponse =
-  "https://unsleeping.infura-ipfs.io/ipfs/QmVpS53vuNpMWkhKnWcZzvfKs1cyWQ4SgiPs2eBJvM7fdj";
-
-const mockNftForm = {
-  price: "1",
-  name: "Test NFT",
-  description: "Test description",
-};
+import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 const CreateNFT = () => {
   const router = useRouter();
   const { uploadToIPFS, createNFT } = React.useContext(NFTContext);
-  const { theme } = useTheme();
+  const { theme, mounted } = useMountedTheme();
   const [fileUrl, setFileUrl] = React.useState("");
   const [formInput, setFormInput] = React.useState<NFTForm>({
     price: "",
@@ -70,6 +58,10 @@ const CreateNFT = () => {
   const handleCreateNFT = async () => {
     await createNFT(formInput, fileUrl, router);
   };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="flex justify-center sm:px-4 p-12">

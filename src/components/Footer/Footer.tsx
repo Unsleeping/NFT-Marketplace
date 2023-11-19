@@ -2,15 +2,18 @@
 
 import * as React from "react";
 import Image from "next/legacy/image";
-import { useTheme } from "next-themes";
 
 import images from "@/assets";
 import Button from "@/components/Button";
 import Paragraph from "@/components/Paragraph";
 import FooterLinks from "./FooterLinks";
+import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 const Footer = () => {
-  const { theme } = useTheme();
+  const { theme, mounted } = useMountedTheme();
+  if (!mounted) {
+    return null;
+  }
   return (
     <footer className="flexCenter flex-col border-t dark:border-nft-black-1 border-nft-gray-1 sm:py-8 py-16">
       <div className="w-full minmd:w-4/5 flex flex-row md:flex-col sm:px-4 px-16">

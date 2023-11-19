@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/legacy/image";
-import { useTheme } from "next-themes";
 
 import {
   Banner,
@@ -18,6 +17,7 @@ import { RenderableMarketItem } from "@/types";
 import { getTopCreators } from "../../utils/getTopCreators";
 import { shortenAddress } from "../../utils/shortenAddress";
 import { useSearch } from "@/hooks/useSearch";
+import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 enum Direction {
   LEFT,
@@ -29,7 +29,7 @@ const Home = () => {
   const [hideArrows, setHideArrows] = React.useState(false);
   const [nfts, setNfts] = React.useState<RenderableMarketItem[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const { theme } = useTheme();
+  const { theme, mounted } = useMountedTheme();
   const parentRef = React.useRef<HTMLDivElement>(null);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const {
@@ -87,6 +87,10 @@ const Home = () => {
   }, []);
 
   const topCreators = getTopCreators(nftsCopy);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="flex justify-center sm:px-4 p-12">

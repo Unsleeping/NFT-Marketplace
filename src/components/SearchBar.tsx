@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import Image from "next/legacy/image";
-import { useTheme } from "next-themes";
 
 import images from "../assets";
+import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 interface SearchBarProps {
   handleSearch: (value: string) => void;
@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [search, setSearch] = React.useState("");
   const [debouncedSearch, setDebouncedSearch] = React.useState(search);
   const [toggle, setToggle] = React.useState(false);
-  const { theme } = useTheme();
+  const { theme, mounted } = useMountedTheme();
   React.useEffect(() => {
     const timer = setTimeout(() => setSearch(debouncedSearch), 1000);
     return () => clearTimeout(timer);
@@ -34,16 +34,19 @@ const SearchBar: React.FC<SearchBarProps> = ({
       clearSearch();
     }
   }, [search]);
+  if (!mounted) {
+    return null;
+  }
   return (
     <>
-      <div className="flex-1 flexCenter dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 px-4 rounded-md py-2">
+      <div className="flex-1 flexCenter dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 px-4 rounded-md py-3">
         <Image
           src={images.search}
           objectFit="contain"
           width={20}
           height={20}
           alt="search"
-          className={theme === "light" ? "filter invert" : ""}
+          className={theme === "light" ? "filter invert" : undefined}
         />
         <input
           type="text"
@@ -55,7 +58,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       </div>
       <div
         onClick={() => setToggle((prev) => !prev)}
-        className="relative flexBetween ml-4 sm:ml-0 sm:mt-2 min-w-190 cursor-pointer dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 px-4 rounded-md"
+        className="relative flexBetween ml-4 sm:ml-0 sm:mt-2 min-w-190 cursor-pointer dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 px-4 rounded-md py-3"
       >
         <p className="font-poppins dark:text-white nft-black-1 font-normal text-xs">
           {activeSelect}
@@ -66,7 +69,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
           width={15}
           height={15}
           alt="arrow"
-          className={theme === "light" ? "filter invert" : ""}
+          className={theme === "light" ? "filter invert" : undefined}
         />
         {toggle && (
           <div className="absolute top-full left-0 right-0 w-full mt-3 z-10 dark:bg-nft-black-2 bg-white border dark:border-nft-black-2 border-nft-gray-2 py-3 px-4 rounded-md">

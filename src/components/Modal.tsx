@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import Image from "next/legacy/image";
-import { useTheme } from "next-themes";
 
 import images from "../assets";
+import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 interface ModalProps {
   header: React.ReactNode;
@@ -15,13 +15,16 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ header, footer, body, handleClose }) => {
   const modalRef = React.useRef<HTMLDivElement>(null);
-  const { theme } = useTheme();
+  const { theme, mounted } = useMountedTheme();
   const handleClickOutside = (e: React.MouseEvent) => {
     const target = e.target as Node;
     if (modalRef?.current && target && !modalRef.current.contains(target)) {
       handleClose();
     }
   };
+  if (!mounted) {
+    return null;
+  }
   return (
     <div
       className="flexCenter fixed inset-0 z-10 bg-overlay-black animated fadeIn"
@@ -39,7 +42,7 @@ const Modal: React.FC<ModalProps> = ({ header, footer, body, handleClose }) => {
             <Image
               src={images.cross}
               layout="fill"
-              className={theme === "light" ? "filter invert" : ""}
+              className={theme === "light" ? "filter invert" : undefined}
             />
           </div>
         </div>

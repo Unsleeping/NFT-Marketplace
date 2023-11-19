@@ -1,10 +1,18 @@
 "use client";
 
 import * as React from "react";
-import { useTheme } from "next-themes";
+import { useWeb3ModalTheme } from "@web3modal/ethers5/react";
+import { useMountedTheme } from "@/hooks/useMountedTheme";
 
 const ThemeToggler = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, mounted } = useMountedTheme();
+  const { setThemeMode } = useWeb3ModalTheme();
+  React.useEffect(() => {
+    setThemeMode(theme);
+  }, [theme]);
+  if (!mounted) {
+    return false;
+  }
   return (
     <>
       <input
